@@ -2,6 +2,7 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 // var chalk = require('chalk');
 var Table = require('cli-table');
+var keys = require('./keys.js');
 
 // establish connection
 var connection = mysql.createConnection({
@@ -12,7 +13,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "",
+  password: keys,
   database: "bamazonDB"
 });
 
@@ -56,7 +57,7 @@ function displayItems() {
     console.log("Welcome to Bam!-azon");
     console.log(table.toString());
     console.log("======================");
-    //idAmountDesired();
+    idAmountDesired();
   });
 }
 
@@ -96,10 +97,10 @@ function idAmountDesired() {
           var totalPrice = parseInt(answer.amount) * response[0].price;
 
           console.log("Total: " + totalPrice);
+        } else {
+          console.log("We're sorry. Insufficent stock for this purchase.");
+          idAmountDesired();
         }
-      } else {
-        console.log("We're sorry. Insufficent stock for this purchase.");
-        idAmountDesired();
       });
     });
 }
