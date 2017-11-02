@@ -94,9 +94,22 @@ function idAmountDesired() {
           console.log("It's yours!");
 
           var newInStock = response[0].stock_quantity - parseInt(answer.amount);
+
+          function updateStock(id, amount) {
+            connection.query("UPDATE products set ? where ?", [{
+              stock_quantity: amount
+            }, {
+              id: id
+            }], function(err, response) {
+
+            });
+          }
+          updateStock(answer.id, newInStock);
+
           var totalPrice = parseInt(answer.amount) * response[0].price;
 
-          console.log("Total: " + totalPrice);
+          console.log("Total Sale Amount: " + totalPrice);
+          buyAgain();
         } else {
           console.log("We're sorry. Insufficent stock for this purchase.");
           idAmountDesired();
@@ -105,4 +118,19 @@ function idAmountDesired() {
     });
 }
 
-// function to update database with in stock information
+// function to start the process over
+function buyAgain() {
+  inquirer.prompt([{
+      type: 'confirm',
+      name: 'buyMore',
+      message: "Would you like to purchase more items?"
+    }])
+    .then(function(answer) {
+      if (answer.buyMore === true) {
+        idAmountDesired();
+      } else {
+        console.log("Thank you for your business. Have a great day!");
+        connection.end();
+      }
+    });
+}
