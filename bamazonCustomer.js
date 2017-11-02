@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-var chalk = require('chalk');
+// var chalk = require('chalk');
 var Table = require('cli-table');
 
 // establish connection
@@ -12,12 +12,12 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "TechPass17!",
+  password: "",
   database: "bamazonDB"
 });
 
 // connection varification
-connection.connect(function (err) {
+connection.connect(function(err) {
   if (err) throw err;
   console.log("connected");
   //connection.end();
@@ -26,46 +26,69 @@ connection.connect(function (err) {
 
 // instruction 5, welcoming the user and displaying initial products
 function displayItems() {
-  connection.query("SELECT * FROM products", function (err, response) {
+  connection.query("SELECT * FROM products", function(err, response) {
     if (err) throw err;
     var table = new Table({
       chars: {
-                'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗'
-                , 'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝'
-                , 'left': '║', 'left-mid': '╟', 'mid': '─', 'mid-mid': '┼'
-                , 'right': '║', 'right-mid': '╢', 'middle': '│'
-            },
+        'top': '═',
+        'top-mid': '╤',
+        'top-left': '╔',
+        'top-right': '╗',
+        'bottom': '═',
+        'bottom-mid': '╧',
+        'bottom-left': '╚',
+        'bottom-right': '╝',
+        'left': '║',
+        'left-mid': '╟',
+        'mid': '─',
+        'mid-mid': '┼',
+        'right': '║',
+        'right-mid': '╢',
+        'middle': '│'
+      },
       head: ['Id', 'Name', 'Price', '# In Stock']
     });
 
     for (var i = 0; i < response.length; i++) {
-      table.push([response[i].id, response[i].product_name, '$' + response[i].price, response[i].stock_quantity]);
+      table.push([response[i].id, response[i].product_name, '$' + response[
+        i].price, response[i].stock_quantity]);
     }
     console.log("Welcome to Bam!-azon");
     console.log(table.toString());
     console.log("======================");
-    //idNameDesired();
+    //idAmountDesired();
   });
 }
 
 // function to ask the id of the product they want to purchase
-function idNameDesired() {
+function idAmountDesired() {
   inquirer.prompt([
-    { name: "id",
-      type: "input",
-      message: "What is the id number of the item you'd like to purchase?",
-      validate: function (value) {
-        var reg = /^d+$/;
-        return reg.test(value) || "Please enter a number."
-      }
-    }
-  ])
-  .then(function (answer) {
-    connection.query("SELECT * FROM products where ?",
+      // instruction 6 - id and how many of item wanted
       {
+        name: "id",
+        type: "input",
+        message: "What is the id number of the item you'd like to purchase?",
+        validate: function(value) {
+          var re = /^\d+$/;
+          return re.test(value) || "Please enter a number."
+        }
+      }, {
+        name: "amount",
+        type: "input",
+        message: "How many would you like?",
+        validate: function(value) {
+          var re = /^\d+$/;
+          return re.test(value) || "Please enter a number."
+        },
+        default: 1
+      }
+    ])
+    .then(function(answer) {
+      connection.query("SELECT * FROM products where ?", {
         id: answer.id
       }, function(err, response) {
         if (err) throw err;
+        //instruction 7 - check availability based on stock
         if (response[0].stock_quantity >= answer.amount) {
           console.log("It's yours!");
 
@@ -76,13 +99,9 @@ function idNameDesired() {
         }
       } else {
         console.log("We're sorry. Insufficent stock for this purchase.");
-        idNameDesired();
-      }
-    )
-  });
+        idAmountDesired();
+      });
+    });
 }
 
-// function to ask how many of the item they would like
-function numToBuy() {
-
-}
+// function to update database with in stock information
