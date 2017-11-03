@@ -20,7 +20,8 @@ var connection = mysql.createConnection({
 // connection varification
 connection.connect(function(err) {
   if (err) throw err;
-  console.log(chalk.hidden("connected"));
+  console.log(chalk.hidden(
+    "================================================"));
 
   displayItems();
 });
@@ -54,9 +55,10 @@ function displayItems() {
       table.push([response[i].id, response[i].product_name, '$' + response[
         i].price, response[i].stock_quantity]);
     }
-    console.log(chalk.bold.yellowBright('Welcome to Bamazon!'));
+    console.log(chalk.bold.yellowBright(
+      '============= WELCOME TO BAMAZON! =============='));
     console.log(table.toString());
-    console.log("======================");
+    console.log("================================================");
     idAmountDesired();
   });
 }
@@ -68,7 +70,8 @@ function idAmountDesired() {
       {
         name: "id",
         type: "input",
-        message: "What is the id number of the item you'd like to purchase?",
+        message: chalk.greenBright(
+          "What is the id number of the item you'd like to purchase?"),
         validate: function(value) {
           var re = /^\d+$/;
           return re.test(value) || "Please enter a number."
@@ -111,7 +114,8 @@ function idAmountDesired() {
           console.log(chalk.magenta("Total Sale Amount: ") + totalPrice);
           buyAgain();
         } else {
-          console.log("We're sorry. Insufficent stock for this purchase.");
+          console.log(chalk.redBright(
+            "We're sorry. Insufficent stock for this purchase."));
           idAmountDesired();
         }
       });
@@ -123,13 +127,14 @@ function buyAgain() {
   inquirer.prompt([{
       type: 'confirm',
       name: 'buyMore',
-      message: "Would you like to purchase more items?"
+      message: chalk.greenBright("Would you like to purchase more items?")
     }])
     .then(function(answer) {
       if (answer.buyMore === true) {
         idAmountDesired();
       } else {
-        console.log("Thank you for your business. Have a great day!");
+        console.log(chalk.redBright(
+          "Thank you for your business. Have a great day!"));
         connection.end();
       }
     });
