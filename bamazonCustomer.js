@@ -91,7 +91,7 @@ function idAmountDesired() {
         if (err) throw err;
         //instruction 7 - check availability based on stock
         if (response[0].stock_quantity >= answer.amount) {
-          console.log(chalk.bold.cyanBright.bgWhite("It's yours!"));
+          console.log(chalk.bold.cyanBright("It's yours!"));
 
           var newInStock = response[0].stock_quantity - parseInt(answer.amount);
 
