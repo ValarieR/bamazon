@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-// var chalk = require('chalk');
+var chalk = require('chalk');
 var Table = require('cli-table');
 var keys = require('./keys.js');
 
@@ -20,8 +20,8 @@ var connection = mysql.createConnection({
 // connection varification
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("connected");
-  //connection.end();
+  console.log(chalk.hidden("connected"));
+
   displayItems();
 });
 
@@ -54,7 +54,7 @@ function displayItems() {
       table.push([response[i].id, response[i].product_name, '$' + response[
         i].price, response[i].stock_quantity]);
     }
-    console.log("Welcome to Bam!-azon");
+    console.log(chalk.bold.yellowBright('Welcome to Bamazon!'));
     console.log(table.toString());
     console.log("======================");
     idAmountDesired();
@@ -91,7 +91,7 @@ function idAmountDesired() {
         if (err) throw err;
         //instruction 7 - check availability based on stock
         if (response[0].stock_quantity >= answer.amount) {
-          console.log("It's yours!");
+          console.log(chalk.bold.cyanBright.bgWhite("It's yours!"));
 
           var newInStock = response[0].stock_quantity - parseInt(answer.amount);
 
@@ -108,7 +108,7 @@ function idAmountDesired() {
 
           var totalPrice = parseInt(answer.amount) * response[0].price;
 
-          console.log("Total Sale Amount: " + totalPrice);
+          console.log(chalk.magenta("Total Sale Amount: ") + totalPrice);
           buyAgain();
         } else {
           console.log("We're sorry. Insufficent stock for this purchase.");
