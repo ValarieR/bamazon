@@ -2,7 +2,8 @@
 
 ## About Bamazon
 
-Bamazon is a node app designed to provide an online shopping experience. Using MySQL, an inventory database is kept current as the user makes purchases.
+Bamazon is a node app designed to provide an online shopping experience. 
+Using MySQL, an inventory database is kept current as the user makes purchases.
 
 ## NPM Packages
 
@@ -21,5 +22,7 @@ Bamazon is a node app designed to provide an online shopping experience. Using M
 * After a successful purchase:
 
 ![Image of completed purchase](https://github.com/ValarieR/bamazon/blob/master/Bamazon2.png)
+
+![MySQL reflecting an updated inventory](https://github.com/ValarieR/bamazon/blob/master/MySQLUpdated.png)
 
 * See a video of bamazon updating the MySQL database [here](https://youtu.be/-mfvkPdPsOM)
